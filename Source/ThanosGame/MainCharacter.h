@@ -27,6 +27,8 @@ public:
 	// Sets default values for this character's properties
 	AMainCharacter();
 
+
+
 	UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Camera)
 		USpringArmComponent* CameraBoom;
 
@@ -49,4 +51,20 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+private:
+
+	bool bSpaceStone = true;
+
+	void Primary();
+
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* TeleportBall;//Blue ball with smoke
+
+	void StartTeleportAbility();
+
+	void Teleport();
+
+	bool bTeleportationAbility = false;
 };

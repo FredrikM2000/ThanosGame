@@ -34,6 +34,9 @@ AMainCharacter::AMainCharacter()
 	FollowCamera->bUsePawnControlRotation = false;//Camera does not rotate relative to the arm
 
 	bDead = false;
+
+	TeleportBall = CreateDefaultSubobject<UStaticMeshComponent>("TeleportBall");
+	TeleportBall->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -41,6 +44,9 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	TeleportBall->SetVisibility(false);
+
+
 }
 
 // Called every frame
@@ -64,6 +70,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMainCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
 
+	PlayerInputComponent->BindAction("StartTeleportAbility", IE_Pressed, this, &AMainCharacter::StartTeleportAbility);
+	PlayerInputComponent->BindAction("Primary", IE_Pressed, this, &AMainCharacter::Primary);
 }
 
 void AMainCharacter::MoveForward(float Axis)
@@ -88,3 +96,47 @@ void AMainCharacter::MoveRight(float Axis)
 		AddMovementInput(Direction, Axis);
 	}
 }
+
+
+
+void AMainCharacter::Primary()
+{
+	if (bSpaceStone) {
+		Teleport();
+	}
+}
+
+void AMainCharacter::StartTeleportAbility()
+{
+	if (!bTeleportationAbility) {
+		bTeleportationAbility = true;
+		TeleportBall->SetVisibility(true);
+	}
+	else if (bTeleportationAbility) {
+		bTeleportationAbility = false;
+		TeleportBall->SetVisibility(false);
+	}
+}
+
+void AMainCharacter::Teleport()
+{
+	if (bTeleportationAbility) {
+		TeleportBall->SetVisibility(false);
+		bTeleportationAbility = false;
+
+
+		FVector CurrentCharacterLocation = GetMesh()->GetComponentLocation();
+		FVector Forward = GetMesh()->GetRightVector();
+
+		FVector NewLocation = CurrentCharacterLocation + Forward * 500 + FVector(0.0f, 0.0f, 20.0f);
+		//The +20z is to make sure the character does not get stuck in the ground because he is falling
+
+		SetActorLocation(NewLocation);
+	}
+}
+
+
+//TODO:
+//Adjust length after how far up the character looks(like reaper)
+//Fix camera so player rotates with camera
+//Fix ball so it does the same as camera when met with collision(move closer to the character)
