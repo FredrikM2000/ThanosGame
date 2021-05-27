@@ -140,3 +140,4 @@ void AMainCharacter::Teleport()
 //Adjust length after how far up the character looks(like reaper)
 //Fix camera so player rotates with camera
 //Fix ball so it does the same as camera when met with collision(move closer to the character)
+//Add timer so player dont teleport instantly, and turn off player control
