@@ -36,7 +36,6 @@ AMainCharacter::AMainCharacter()
 
 	bDead = false;
 
-
 	BallBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("BallBoom"));
 	BallBoom->SetupAttachment(FollowCamera);
 	BallBoom->TargetArmLength = 2000.0f;
@@ -58,8 +57,6 @@ void AMainCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	TeleportBall->SetVisibility(false);
-
-
 }
 
 // Called every frame
@@ -67,18 +64,14 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//int32 TeleportDistance = FVector::Dist(TeleportBall->GetComponentLocation(), GetMesh()->GetComponentLocation());
-	//int32 TeleportDistance = FVector::Dist(TeleportBall->GetComponentLocation(), BallBoom2->GetComponentLocation());
+	int32 TeleportDistance = FVector::Dist(TeleportBall->GetComponentLocation(), GetMesh()->GetComponentLocation());
 
-
-	//if (bTeleportationAbility && TeleportDistance <= 199.0f) {
-	//	//bTeleportationAbility = false;
-	//	TeleportBall->SetVisibility(false);
-	//}
-	//if (bTeleportationAbility && TeleportDistance >= 199.0f) {
-	//	//bTeleportationAbility = false;
-	//	TeleportBall->SetVisibility(true);
-	//}
+	if (bTeleportationAbility && TeleportDistance >= 1750.0f) {
+		TeleportBall->SetVisibility(false);
+	}
+	if (bTeleportationAbility && TeleportDistance <= 1750.0f) {
+		TeleportBall->SetVisibility(true);
+	}
 }
 
 // Called to bind functionality to input
@@ -122,8 +115,6 @@ void AMainCharacter::MoveRight(float Axis)
 	}
 }
 
-
-
 void AMainCharacter::Primary()
 {
 	if (bSpaceStone) {
@@ -134,20 +125,17 @@ void AMainCharacter::Primary()
 void AMainCharacter::StartTeleportAbility()
 {
 	if (!bTeleportationAbility) {
-		bTeleportationAbility = true;
-		TeleportBall->SetVisibility(true);
+		Change(true);
 	}
 	else if (bTeleportationAbility) {
-		bTeleportationAbility = false;
-		TeleportBall->SetVisibility(false);
+		Change(false);
 	}
 }
 
 void AMainCharacter::Teleport()
 {
-	if (bTeleportationAbility) {
-		TeleportBall->SetVisibility(false);
-		bTeleportationAbility = false;
+	if (bTeleportationAbility && TeleportBall->IsVisible()) {
+		Change(false);
 
 		FVector NewLocation = TeleportBall->GetComponentLocation();
 
@@ -155,11 +143,12 @@ void AMainCharacter::Teleport()
 	}
 }
 
+void AMainCharacter::Change(bool bVisible)
+{
+	TeleportBall->SetVisibility(bVisible);
+	bTeleportationAbility = bVisible;
+}
 
 //TODO:
 //Fix camera so player rotates with camera
 //Add timer so player dont teleport instantly, and turn off player control
-
-
-//if ball 2000 fra karakter skru av visibility og ability
-//capsule, og ha ballen litt ovenfor capsulen

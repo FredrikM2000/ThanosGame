@@ -74,4 +74,6 @@ private:
 	void Teleport();
 
 	bool bTeleportationAbility = false;
+
+	void Change(bool bVisible);
 };
