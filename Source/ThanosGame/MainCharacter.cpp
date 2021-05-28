@@ -3,6 +3,7 @@
 
 
 #include "MainCharacter.h"
+#include "Math/Vector.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -35,8 +36,20 @@ AMainCharacter::AMainCharacter()
 
 	bDead = false;
 
+
+	BallBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("BallBoom"));
+	BallBoom->SetupAttachment(FollowCamera);
+	BallBoom->TargetArmLength = 2000.0f;
+
+	CapsuleBall = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleBall"));
+	CapsuleBall->SetupAttachment(BallBoom, USpringArmComponent::SocketName);
+
+	BallBoom2 = CreateDefaultSubobject<USpringArmComponent>(TEXT("BallBoom2"));
+	BallBoom2->SetupAttachment(CapsuleBall);
+	BallBoom2->TargetArmLength = 200.0f;
+
 	TeleportBall = CreateDefaultSubobject<UStaticMeshComponent>("TeleportBall");
-	TeleportBall->SetupAttachment(RootComponent);
+	TeleportBall->SetupAttachment(BallBoom2, USpringArmComponent::SocketName);
 }
 
 // Called when the game starts or when spawned
@@ -54,6 +67,18 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//int32 TeleportDistance = FVector::Dist(TeleportBall->GetComponentLocation(), GetMesh()->GetComponentLocation());
+	//int32 TeleportDistance = FVector::Dist(TeleportBall->GetComponentLocation(), BallBoom2->GetComponentLocation());
+
+
+	//if (bTeleportationAbility && TeleportDistance <= 199.0f) {
+	//	//bTeleportationAbility = false;
+	//	TeleportBall->SetVisibility(false);
+	//}
+	//if (bTeleportationAbility && TeleportDistance >= 199.0f) {
+	//	//bTeleportationAbility = false;
+	//	TeleportBall->SetVisibility(true);
+	//}
 }
 
 // Called to bind functionality to input
@@ -124,12 +149,7 @@ void AMainCharacter::Teleport()
 		TeleportBall->SetVisibility(false);
 		bTeleportationAbility = false;
 
-
-		FVector CurrentCharacterLocation = GetMesh()->GetComponentLocation();
-		FVector Forward = GetMesh()->GetRightVector();
-
-		FVector NewLocation = CurrentCharacterLocation + Forward * 500 + FVector(0.0f, 0.0f, 20.0f);
-		//The +20z is to make sure the character does not get stuck in the ground because he is falling
+		FVector NewLocation = TeleportBall->GetComponentLocation();
 
 		SetActorLocation(NewLocation);
 	}
@@ -137,7 +157,9 @@ void AMainCharacter::Teleport()
 
 
 //TODO:
-//Adjust length after how far up the character looks(like reaper)
 //Fix camera so player rotates with camera
-//Fix ball so it does the same as camera when met with collision(move closer to the character)
 //Add timer so player dont teleport instantly, and turn off player control
+
+
+//if ball 2000 fra karakter skru av visibility og ability
+//capsule, og ha ballen litt ovenfor capsulen

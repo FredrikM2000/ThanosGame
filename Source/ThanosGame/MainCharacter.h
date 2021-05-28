@@ -27,13 +27,20 @@ public:
 	// Sets default values for this character's properties
 	AMainCharacter();
 
-
-
 	UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Camera)
 		USpringArmComponent* CameraBoom;
 
+	UPROPERTY(VisibleAnywhere, BluePrintReadOnly)
+		USpringArmComponent* BallBoom;
+
+	UPROPERTY(VisibleAnywhere, BluePrintReadOnly)
+		USpringArmComponent* BallBoom2;
+
 	UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Camera)
 		UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BluePrintReadOnly)
+	UCapsuleComponent* CapsuleBall;
 
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
