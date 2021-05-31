@@ -157,21 +157,22 @@ void AMainCharacter::StartPickStone()
 {
 	//OpenWidget
 	//Start slowmo
+	//Turn of controls
+	//Enable mouse cursor
+	//Disable mouse control
+	//If hover above ... choose stone or sumn
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.5);
 }
 
 void AMainCharacter::StopPickStone()
 {
+	//Opposite of StartPickStone()
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1);
-
 }
-
-
-
-
 
 
 
 //TODO:
 //Fix camera so player rotates with camera
 //Add timer so player dont teleport instantly, and turn off player control
+//Add testing variable so you can push button and everything is ready for testing
