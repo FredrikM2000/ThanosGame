@@ -76,4 +76,8 @@ private:
 	bool bTeleportationAbility = false;
 
 	void Change(bool bVisible);
+
+	void StartPickStone();
+	void StopPickStone();
+
 };

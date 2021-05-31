@@ -4,6 +4,7 @@
 
 #include "MainCharacter.h"
 #include "Math/Vector.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -90,6 +91,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("StartTeleportAbility", IE_Pressed, this, &AMainCharacter::StartTeleportAbility);
 	PlayerInputComponent->BindAction("Primary", IE_Pressed, this, &AMainCharacter::Primary);
+
+	PlayerInputComponent->BindAction("StartPickStone", IE_Pressed, this, &AMainCharacter::StartPickStone);
+	PlayerInputComponent->BindAction("StopPickStone", IE_Released, this, &AMainCharacter::StopPickStone);
 }
 
 void AMainCharacter::MoveForward(float Axis)
@@ -148,6 +152,25 @@ void AMainCharacter::Change(bool bVisible)
 	TeleportBall->SetVisibility(bVisible);
 	bTeleportationAbility = bVisible;
 }
+
+void AMainCharacter::StartPickStone()
+{
+	//OpenWidget
+	//Start slowmo
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.5);
+}
+
+void AMainCharacter::StopPickStone()
+{
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1);
+
+}
+
+
+
+
+
+
 
 //TODO:
 //Fix camera so player rotates with camera
